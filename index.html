@@ -3,47 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>インベーダーゲーム</title>
+    <title>ゲームポータル</title>
     <style>
         body {
             margin: 0;
-            padding: 0;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            font-family: Arial, sans-serif;
-        }
-        canvas {
-            border: 2px solid #fff;
-            background: #000;
-        }
-        #ui {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            padding: 20px;
+            background-color: #111;
             color: #fff;
+            font-family: Arial, sans-serif;
             text-align: center;
         }
-        #score {
-            font-size: 24px;
-            margin-bottom: 10px;
+        
+        h1 {
+            color: #00ff00;
+            margin-bottom: 30px;
         }
-        #gameOver {
-            font-size: 36px;
-            color: #ff0000;
-            display: none;
+        
+        .game-grid {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .game-card {
+            background-color: #222;
+            border: 2px solid #444;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            border-color: #00ff00;
+        }
+        
+        .game-card h2 {
+            color: #ffff00;
+            margin-bottom: 15px;
+        }
+        
+        .game-card p {
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .play-button {
+            display: inline-block;
+            background-color: #00ff00;
+            color: #000;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .play-button:hover {
+            background-color: #00cc00;
+        }
+        
+        .invader-card {
+            border-color: #ff0000;
+        }
+        
+        .mario-card {
+            border-color: #0080ff;
         }
     </style>
 </head>
 <body>
-    <div id="ui">
-        <div id="score">スコア: 0</div>
-        <div id="gameOver">ゲームオーバー<br>スペースキーでリスタート</div>
+    <h1>🎮 ゲームポータル 🎮</h1>
+    
+    <div class="game-grid">
+        <div class="game-card invader-card">
+            <h2>🛸 インベーダーゲーム</h2>
+            <p>
+                宇宙からの侵略者を撃退せよ！<br>
+                5レベルごとに強力なボスが出現します。<br>
+                矢印キーで移動、スペースキーで射撃。
+            </p>
+            <a href="invader.html" class="play-button">プレイ開始</a>
+        </div>
+        
+        <div class="game-card mario-card">
+            <h2>🍄 マリオゲーム</h2>
+            <p>
+                懐かしのプラットフォームゲーム！<br>
+                ジャンプしてコインを集めて、<br>
+                ゴールを目指そう。
+            </p>
+            <a href="Mario/index.html" class="play-button">プレイ開始</a>
+        </div>
     </div>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
-    <script src="game.js"></script>
 </body>
 </html>
