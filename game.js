@@ -13,6 +13,8 @@ class Game {
         this.bullets = [];
         this.enemyBullets = [];
         this.invaders = [];
+        this.boss = null;
+        this.level = 1;
         this.lastShot = 0;
         this.enemyShootTimer = 0;
         
@@ -52,6 +54,8 @@ class Game {
         this.bullets = [];
         this.enemyBullets = [];
         this.invaders = [];
+        this.boss = null;
+        this.level = 1;
         this.createInvaders();
         document.getElementById('gameOver').style.display = 'none';
     }
@@ -116,8 +120,27 @@ class Game {
         this.checkCollisions();
         
         // Check win condition
-        if (this.invaders.length === 0) {
-            this.createInvaders();
+        if (this.invaders.length === 0 && !this.boss) {
+            if (this.level % 5 === 0) {
+                this.spawnBoss();
+            } else {
+                this.level++;
+                this.createInvaders();
+            }
+        }
+        
+        // Update boss
+        if (this.boss) {
+            this.boss.update();
+            
+            // Boss shooting
+            if (Math.random() < 0.02) {
+                this.enemyBullets.push(new Bullet(
+                    this.boss.x + this.boss.width / 2 - 2,
+                    this.boss.y + this.boss.height,
+                    5
+                ));
+            }
         }
         
         // Check game over
@@ -126,6 +149,10 @@ class Game {
                 this.gameOver();
                 break;
             }
+        }
+        
+        if (this.boss && this.boss.y + this.boss.height >= this.player.y) {
+            this.gameOver();
         }
     }
     
@@ -147,6 +174,30 @@ class Game {
             }
         }
         
+        // Player bullets vs boss
+        if (this.boss) {
+            for (let i = this.bullets.length - 1; i >= 0; i--) {
+                if (this.bullets[i] &&
+                    this.bullets[i].x < this.boss.x + this.boss.width &&
+                    this.bullets[i].x + this.bullets[i].width > this.boss.x &&
+                    this.bullets[i].y < this.boss.y + this.boss.height &&
+                    this.bullets[i].y + this.bullets[i].height > this.boss.y) {
+                    
+                    this.bullets.splice(i, 1);
+                    this.boss.takeDamage();
+                    this.score += 50;
+                    
+                    if (this.boss.hp <= 0) {
+                        this.score += 500;
+                        this.boss = null;
+                        this.level++;
+                        this.createInvaders();
+                    }
+                    break;
+                }
+            }
+        }
+        
         // Enemy bullets vs player
         for (let i = this.enemyBullets.length - 1; i >= 0; i--) {
             if (this.enemyBullets[i] &&
@@ -160,6 +211,10 @@ class Game {
                 break;
             }
         }
+    }
+    
+    spawnBoss() {
+        this.boss = new Boss(this.width / 2 - 60, 50);
     }
     
     gameOver() {
@@ -178,6 +233,11 @@ class Game {
             invader.draw(this.ctx);
         }
         
+        // Draw boss
+        if (this.boss) {
+            this.boss.draw(this.ctx);
+        }
+        
         // Draw bullets
         for (let bullet of this.bullets) {
             bullet.draw(this.ctx);
@@ -187,8 +247,35 @@ class Game {
             bullet.draw(this.ctx);
         }
         
-        // Update score
-        document.getElementById('score').textContent = `スコア: ${this.score}`;
+        // Update score and level
+        document.getElementById('score').textContent = `スコア: ${this.score} | レベル: ${this.level}`;
+        
+        // Draw boss HP bar
+        if (this.boss) {
+            const barWidth = 200;
+            const barHeight = 20;
+            const barX = (this.width - barWidth) / 2;
+            const barY = 20;
+            
+            // Background
+            this.ctx.fillStyle = '#333';
+            this.ctx.fillRect(barX, barY, barWidth, barHeight);
+            
+            // HP bar
+            this.ctx.fillStyle = '#ff0000';
+            this.ctx.fillRect(barX, barY, (this.boss.hp / this.boss.maxHp) * barWidth, barHeight);
+            
+            // Border
+            this.ctx.strokeStyle = '#fff';
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(barX, barY, barWidth, barHeight);
+            
+            // Text
+            this.ctx.fillStyle = '#fff';
+            this.ctx.font = '14px Arial';
+            this.ctx.textAlign = 'center';
+            this.ctx.fillText('BOSS', this.width / 2, barY + 35);
+        }
     }
     
     gameLoop() {
@@ -261,6 +348,56 @@ class Bullet {
     draw(ctx) {
         ctx.fillStyle = this.velocityY < 0 ? '#ffff00' : '#ff00ff';
         ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+}
+
+class Boss {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.width = 120;
+        this.height = 80;
+        this.speed = 2;
+        this.direction = 1;
+        this.maxHp = 20;
+        this.hp = this.maxHp;
+        this.shootTimer = 0;
+    }
+    
+    update() {
+        this.x += this.speed * this.direction;
+        
+        if (this.x <= 0 || this.x >= 800 - this.width) {
+            this.direction *= -1;
+        }
+        
+        this.shootTimer++;
+    }
+    
+    takeDamage() {
+        this.hp--;
+    }
+    
+    draw(ctx) {
+        // Main body
+        ctx.fillStyle = '#800080';
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+        
+        // Details
+        ctx.fillStyle = '#ff0080';
+        ctx.fillRect(this.x + 10, this.y + 10, 20, 20);
+        ctx.fillRect(this.x + 90, this.y + 10, 20, 20);
+        ctx.fillRect(this.x + 50, this.y + 30, 20, 30);
+        
+        // Eyes
+        ctx.fillStyle = '#ff0000';
+        ctx.fillRect(this.x + 20, this.y + 15, 8, 8);
+        ctx.fillRect(this.x + 92, this.y + 15, 8, 8);
+        
+        // Cannons
+        ctx.fillStyle = '#333';
+        ctx.fillRect(this.x + 15, this.y + this.height, 10, 15);
+        ctx.fillRect(this.x + 95, this.y + this.height, 10, 15);
     }
 }
 
