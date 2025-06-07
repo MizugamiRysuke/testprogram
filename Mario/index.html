@@ -3,63 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>マリオゲーム</title>
+    <title>Super Mario Bros</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            background: #000;
+            background: linear-gradient(to bottom, #5C94FC, #87CEEB);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            font-family: Arial, sans-serif;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
         }
         canvas {
-            border: 2px solid #fff;
-            background: #000;
+            border: 3px solid #8B4513;
+            background: linear-gradient(to bottom, #5C94FC, #87CEEB);
         }
         #ui {
             position: absolute;
             top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 20px;
             color: #fff;
-            text-align: center;
-        }
-        #score {
-            font-size: 24px;
-            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px #000;
+            font-weight: bold;
+            font-size: 18px;
+            z-index: 100;
         }
         #gameOver {
-            font-size: 36px;
-            color: #ff0000;
-            display: none;
-        }
-        #back {
             position: absolute;
-            top: 20px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ff0000;
+            font-size: 48px;
+            text-align: center;
+            display: none;
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 10px;
+            text-shadow: 2px 2px 0px #000;
+        }
+        #instructions {
+            position: absolute;
+            bottom: 20px;
             left: 20px;
-        }
-        #back a {
-            color: #00ff00;
-            text-decoration: none;
-            font-size: 18px;
-        }
-        #back a:hover {
-            text-decoration: underline;
+            color: #fff;
+            text-shadow: 2px 2px 0px #000;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <div id="back">
-        <a href="../index.html">← メニューに戻る</a>
-    </div>
     <div id="ui">
-        <div id="score">スコア: 0</div>
-        <div id="gameOver">ゲームオーバー<br>スペースキーでリスタート</div>
+        <div id="score">Score: 0 | World: 1-1 | Lives: 3</div>
     </div>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
-    <script src="mario.js"></script>
+    <div id="gameOver">
+        GAME OVER<br>
+        <span style="font-size: 24px;">Press SPACE to restart</span>
+    </div>
+    <div id="instructions">
+        Arrow Keys: Move & Jump | Space: Fire (when powered up)
+    </div>
+    <canvas id="gameCanvas" width="1024" height="512"></canvas>
+    <script src="game.js"></script>
 </body>
 </html>
