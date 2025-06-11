@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アイスホッケーゲーム</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="scoreboard">
+            <div id="player-score">プレイヤー: <span id="player-points">0</span></div>
+            <div id="cpu-score">CPU: <span id="cpu-points">0</span></div>
+        </div>
+        
+        <canvas id="game-canvas" width="800" height="400"></canvas>
+        
+        <div id="controls">
+            <div>矢印キーでプレイヤーを移動</div>
+            <div>スペースキーでパックを打つ</div>
+            <button id="reset-btn">リセット</button>
+        </div>
+    </div>
+    
+    <script src="game.js"></script>
+</body>
+</html>
